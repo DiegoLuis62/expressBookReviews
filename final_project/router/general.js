@@ -23,26 +23,46 @@ public_users.get('/isbn/:isbn', function (req, res) {
     let isbn = req.params.isbn;
     const isbnNum = parseInt(isbn);
 
-    if (!isbn || isNaN(isbnNum) ) { return res.status(400).json({message:"Parametro Invalido o no enviado "})}
-    
+    if (!isbn || isNaN(isbnNum)) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
+
     if (books[isbn]) {
         res.json(books[isbn]);
     } else {
-        return res.status(404).json({ error: "Book not found" });
+        return res.status(404).json({ error: "Libro no encontrado" });
     }
 
 });
 
 // Get book details based on author
 public_users.get('/author/:author', function (req, res) {
-    //Write your code here
-    return res.status(300).json({ message: "Yet to be implemented" });
+
+    const author = req.params.author;
+    if(!author){ return res.status(400).json({message:"Autor no enviado"})}
+
+    for (let isbn in books) {
+        if (books[isbn].author === author) {
+            return res.send(books[isbn])
+        }
+    }
+
+    return res.status(404).json({message: "Autor no encontrado"});
+
 });
 
 // Get all books based on title
 public_users.get('/title/:title', function (req, res) {
-    //Write your code here
-    return res.status(300).json({ message: "Yet to be implemented" });
+    const title = req.params.title;
+    if(!title){ return res.status(400).json({message:"titulo no enviado"})}
+
+    for (let isbn in books) {
+        if (books[isbn].title === title) {
+            return res.send(books[isbn])
+        }
+    }
+
+    return res.status(404).json({message: "titulo no encontrado"});
+
+
 });
 
 //  Get book review
