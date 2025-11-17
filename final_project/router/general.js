@@ -33,9 +33,9 @@ public_users.get('/', function (req, res) {
 public_users.get('/isbn/:isbn', function (req, res) {
 
     let isbn = req.params.isbn;
-    const isbnNum = parseInt(isbn);
+  
 
-    if (!isbn || isNaN(isbnNum)) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
+    if (!isbn || isNaN(isbn)) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
 
     if (books[isbn]) {
         res.json(books[isbn]);
@@ -80,10 +80,10 @@ public_users.get('/title/:title', function (req, res) {
 //  Get book review
 public_users.get('/review/:isbn', function (req, res) {
 
-    let isbn = req.params.isbn;
-    const isbnNum = parseInt(isbn);
+    const isbn = req.params.isbn;
+    
 
-    if (!isbn || isNaN(isbnNum)) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
+    if (!isbn || isNaN(isbn)) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
 
     if (books[isbn]) {
         res.json(books[isbn].reviews);

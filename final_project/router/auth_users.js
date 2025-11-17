@@ -16,7 +16,7 @@ const isValid = (username) => { //returns boolean
 
 const authenticatedUser = (username, password) => { //returns boolean
     //write code to check if username and password match the one we have in records.
-    const userFound = users.find(user => user.username === username && user.password === password)er
+    const userFound = users.find(user => user.username === username && user.password === password)
     return userFound
 }
 
@@ -35,14 +35,31 @@ regd_users.post("/login", (req, res) => {
 
     const accessToken = jwt.sign({ username: username }, "secretkey", { expiresIn: 60 * 60 });
     req.session.authorization = { accessToken: accessToken }
-    return res.status(200).json({ message: "Login exitoso", token: accessToken });
+    return res.status(200).json({ message: "Login exitoso", username, token: accessToken });
 
 });
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    //Write your code here
-    return res.status(300).json({ message: "Yet to be implemented" });
+    let isbn = req.params.isbn;
+    const review = req.body.review;
+    const username = req.user.username;
+
+    if (!isbn || isNaN(isbn) || !review) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
+
+
+    if (books[isbn]) {
+
+        books[isbn].reviews = { ...books[isbn].reviews, [username]: req.body.review }
+        res.status(201).json({
+            message: "Added or updated review sucefully",
+            "Your review": books[isbn].reviews[username]
+        });
+
+    } else {
+        return res.status(404).json({ error: "reviews no encontrada" });
+    }
+
 });
 
 module.exports.authenticated = regd_users;
