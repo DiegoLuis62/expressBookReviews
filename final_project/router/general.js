@@ -5,9 +5,21 @@ let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
 
+
 public_users.post("/register", (req, res) => {
-    //Write your code here
-    return res.status(300).json({ message: "Yet to be implemented" });
+
+    const username = req.body.username;
+    const password = req.body.password;
+
+    if (!username || !password) { return res.status(400).json({ message: "Usuario o contraseña no enviado" }) }
+    if (!isValid(username)) { return res.status(400).json({ message: "Usuario ya existe" }) }
+
+    users.push({ username, password })
+    res.status(201).json({
+        message: "Usuario registrado exitosamente",
+        username: username
+    })
+
 });
 
 // Get the book list available in the shop
@@ -37,7 +49,7 @@ public_users.get('/isbn/:isbn', function (req, res) {
 public_users.get('/author/:author', function (req, res) {
 
     const author = req.params.author;
-    if(!author){ return res.status(400).json({message:"Autor no enviado"})}
+    if (!author) { return res.status(400).json({ message: "Autor no enviado" }) }
 
     for (let isbn in books) {
         if (books[isbn].author === author) {
@@ -45,14 +57,14 @@ public_users.get('/author/:author', function (req, res) {
         }
     }
 
-    return res.status(404).json({message: "Autor no encontrado"});
+    return res.status(404).json({ message: "Autor no encontrado" });
 
 });
 
 // Get all books based on title
 public_users.get('/title/:title', function (req, res) {
     const title = req.params.title;
-    if(!title){ return res.status(400).json({message:"titulo no enviado"})}
+    if (!title) { return res.status(400).json({ message: "titulo no enviado" }) }
 
     for (let isbn in books) {
         if (books[isbn].title === title) {
@@ -60,15 +72,26 @@ public_users.get('/title/:title', function (req, res) {
         }
     }
 
-    return res.status(404).json({message: "titulo no encontrado"});
+    return res.status(404).json({ message: "titulo no encontrado" });
 
 
 });
 
 //  Get book review
 public_users.get('/review/:isbn', function (req, res) {
-    //Write your code here
-    return res.status(300).json({ message: "Yet to be implemented" });
+
+    let isbn = req.params.isbn;
+    const isbnNum = parseInt(isbn);
+
+    if (!isbn || isNaN(isbnNum)) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
+
+    if (books[isbn]) {
+        res.json(books[isbn].reviews);
+    } else {
+        return res.status(404).json({ error: "reviews no encontrada" });
+    }
+
+
 });
 
 module.exports.general = public_users;
