@@ -3,6 +3,7 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios');
 
 
 
@@ -33,7 +34,7 @@ public_users.get('/', function (req, res) {
 public_users.get('/isbn/:isbn', function (req, res) {
 
     let isbn = req.params.isbn;
-  
+
 
     if (!isbn || isNaN(isbn)) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
 
@@ -81,7 +82,7 @@ public_users.get('/title/:title', function (req, res) {
 public_users.get('/review/:isbn', function (req, res) {
 
     const isbn = req.params.isbn;
-    
+
 
     if (!isbn || isNaN(isbn)) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
 
@@ -93,5 +94,90 @@ public_users.get('/review/:isbn', function (req, res) {
 
 
 });
+
+public_users.get("/task10", async function (req, res) {
+    try {
+        const response = await axios.get("https://dlineroramir-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/");
+        const data = response.data;
+        res.json(data);
+    } catch (error) {
+
+        res.status(500).json({ error: "Error al obtener la lista de libros" });
+
+    }
+
+});
+
+
+
+public_users.get("/task10", async function (req, res) {
+    try {
+        const response = await axios.get("https://dlineroramir-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/");
+        const data = response.data;
+        res.json(data);
+    } catch (error) {
+
+        res.status(500).json({ error: "Error al obtener la lista de libros" });
+
+    }
+
+});
+
+
+
+public_users.get("/task11/:isbn", async function (req, res) {
+
+const isbn = req.params.isbn;
+
+    try {
+        const response = await axios.get(`https://dlineroramir-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/isbn/${isbn}`);
+        const data = response.data;
+        res.json(data);
+    } catch (error) {
+
+        res.status(500).json({ error: "Error al obtener la lista de libros" });
+
+    }
+
+});
+
+
+public_users.get("/task12/:author", async function (req, res) {
+
+    const author = req.params.author;
+    
+        try {
+            const response = await axios.get(`https://dlineroramir-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/author/${author}`);
+            const data = response.data;
+            res.json(data);
+        } catch (error) {
+    
+            res.status(500).json({ error: "Error al obtener la lista de libros" });
+    
+        }
+    
+    });
+
+
+
+    public_users.get("/task13/:title", async function (req, res) {
+
+        const title = req.params.title;
+        
+            try {
+                const response = await axios.get(`https://dlineroramir-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/title/${title}`);
+                const data = response.data;
+                res.json(data);
+            } catch (error) {
+        
+                res.status(500).json({ error: "Error al obtener la lista de libros" });
+        
+            }
+        
+        });
+
+
+
+
 
 module.exports.general = public_users;
