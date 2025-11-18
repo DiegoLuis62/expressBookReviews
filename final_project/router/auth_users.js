@@ -62,6 +62,28 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
 });
 
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+
+    let isbn = req.params.isbn;
+    const username = req.user.username;
+
+    if (!isbn || isNaN(isbn)) { return res.status(400).json({ message: "Parametro Invalido o no enviado " }) }
+
+    if (books[isbn]) { 
+
+        res.status(200).json({message:"Review eliminada", review: books[isbn].reviews[username] })
+        delete  books[isbn].reviews[username]
+
+    } else {
+        return res.status(404).json({ error: "reviews no encontrada" });
+    }
+
+
+
+})
+
+
+
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
